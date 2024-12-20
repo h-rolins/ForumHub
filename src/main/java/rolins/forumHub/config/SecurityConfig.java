@@ -15,8 +15,7 @@ public class SecurityConfig {
         http
                 .csrf().disable() // Para simplificar no Postman (recomendável habilitar em produção)
                 .authorizeHttpRequests()
-                .requestMatchers("/topicos").authenticated() // Exige autenticação para o endpoint
-                .anyRequest().permitAll() // Outras rotas públicas (ajuste conforme necessário)
+                .anyRequest().authenticated() // Exige autenticação para todas as rotas
                 .and()
                 .httpBasic(); // Habilita autenticação básica
 

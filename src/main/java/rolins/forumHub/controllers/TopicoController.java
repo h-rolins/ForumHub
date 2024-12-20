@@ -58,4 +58,42 @@ public class TopicoController {
 
         return ResponseEntity.ok(topicos);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<topico> detalharTopico(@PathVariable Long id) {
+        // Buscar o tópico pelo ID
+        Optional<topico> topicoOpt = topicoRepository.findById(id);
+
+        // Verificar se o tópico existe
+        if (topicoOpt.isPresent()) {
+            return ResponseEntity.ok(topicoOpt.get());
+        } else {
+            return ResponseEntity.notFound().build(); // Retorna 404 se não encontrado
+        }
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<topico> atualizarTopico(@PathVariable Long id, @RequestBody topico topicoAtualizado) {
+        // Buscar o tópico pelo ID
+        Optional<topico> topicoOpt = topicoRepository.findById(id);
+
+        // Verificar se o tópico existe
+        if (topicoOpt.isPresent()) {
+            // Obter o tópico existente
+            topico topicoExistente = topicoOpt.get();
+
+            // Atualizar os dados do tópico
+            topicoExistente.setTitulo(topicoAtualizado.getTitulo());
+            topicoExistente.setMensagem(topicoAtualizado.getMensagem());
+            topicoExistente.setStatus(topicoAtualizado.getStatus());
+            topicoExistente.setAutor(topicoAtualizado.getAutor());
+            topicoExistente.setCurso(topicoAtualizado.getCurso());
+            topicoExistente.setDataCriacao(topicoAtualizado.getDataCriacao());  // Atualiza a data de criação
+
+            // Salvar o tópico atualizado no banco de dados
+            topicoRepository.save(topicoExistente);
+
+            return ResponseEntity.ok(topicoExistente); // Retorna o tópico atualizado com status 200
+        } else {
+            return ResponseEntity.notFound().build(); // Retorna 404 se o tópico não for encontrado
+        }
+    }
 }
